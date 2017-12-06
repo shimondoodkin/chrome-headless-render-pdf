@@ -7,12 +7,12 @@
   "repository": "https://github.com/Szpadel/chrome-headless-render-pdf",
   "engineStrict": true,
   "bin": {
-    "chrome-headless-render-pdf": "dist/cli/chrome-headless-render-pdf.js"
+    "chrome-headless-render-pdf": "cli/chrome-headless-render-pdf.js"
   },
   "scripts": {
     "prepublish": "yarn run build",
-    "build": "babel index.js cli/chrome-headless-render-pdf.js --presets env --plugins transform-runtime --out-dir dist/",
-    "start": "yarn run build && node dist/cli/chrome-headless-render-pdf.js"
+    "build": "babel index.js cli/chrome-headless-render-pdf.js --presets env --plugins transform-runtime --out-dir dist",
+    "start": "yarn run build && node cli/chrome-headless-render-pdf.js"
   },
   "dependencies": {
     "@types/node": "^8.0.15",
