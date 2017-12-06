@@ -28,14 +28,14 @@ chrome-headless-render-pdf [OPTIONS] --url=URL --pdf=OUTPUT-FILE [--url=URL2 --p
 # This tool can be also used programmatically:
 ```
 const RenderPDF = require('chrome-headless-render-pdf');
-RenderPDF.generateSinglePdf('http://google.com', 'outputPdf.pdf'});
+RenderPDF.generateSinglePdf({url:'http://google.com', pdf:'outputPdf.pdf'});
 ```
 
 ```
 const RenderPDF = require('chrome-headless-render-pdf');
 RenderPDF.generateMultiplePdf([
-    {'http://google.com', 'outputPdf.pdf'},
-    {'http://example.com', 'outputPdf2.pdf'}
+    {url: 'http://google.com' , pdf:'outputPdf.pdf' },
+    {url: 'http://example.com', pdf:'outputPdf2.pdf'}
 ]);
 ```
 
@@ -50,7 +50,7 @@ RenderPDF.generatePdfBuffer('http://google.com')
 # you can also use it from typescript or es6
 ```
 import RenderPDF from 'chrome-headless-render-pdf';
-RenderPDF.generateSinglePdf('http://google.com', 'outputPdf.pdf'});
+RenderPDF.generateSinglePdf({url:'http://google.com', pdf:'outputPdf.pdf'});
 ```
 
 # Motivation
