@@ -17,8 +17,7 @@ const argv = require('minimist')(process.argv.slice(2), {
         'pdf',
         'chrome-binary',
         'window-size',
-        'paper-width',
-        'paper-height',
+        'extra-cli-options'
     ],
     boolean: [
         'no-margins',
@@ -58,16 +57,6 @@ if (typeof argv['chrome-binary'] === 'string') {
     chromeBinary = argv['chrome-binary'];
 }
 
-let paperWidth = undefined;
-if (typeof argv['paper-width'] === 'string') {
-    paperWidth = argv['paper-width'];
-}
-
-let paperHeight = undefined;
-if (typeof argv['paper-height'] === 'string') {
-    paperHeight = argv['paper-height'];
-}
-
 let landscape;
 if (argv['landscape']) {
     landscape = true;
@@ -83,6 +72,12 @@ if (argv['include-background']) {
     includeBackground = true;
 }
 
+let extraCliOptions;
+if (typeof argv['extra-cli-options'] === 'string') {
+    console.log(argv['extra-cli-options'])
+    extraCliOptions = require('string-argv')(argv['extra-cli-options']);
+}
+
 (async () => {
     try {
         const jobs = generateJobList(urls, pdfs);
@@ -93,8 +88,7 @@ if (argv['include-background']) {
             includeBackground,
             chromeBinary,
             windowSize,
-            paperWidth,
-            paperHeight
+            extraCliOptions,
         });
     } catch (e) {
         console.error(e);
@@ -126,8 +120,7 @@ function printHelp() {
     console.log('    --include-background     include elements background');
     console.log('    --landscape              generate pdf in landscape orientation');
     console.log('    --window-size            specify window size, width(,x*)height (e.g. --window-size 1600,1200 or --window-size 1600x1200)');
-    console.log('    --paper-width            specify page width in inches (defaults to 8.5 inches)');
-    console.log('    --paper-height           specify page height in inches (defaults to 11 inches)');
+    console.log('.   --extra-cli-options      extra command line options to be passed directly to the chrome binary on the command line (ex. --extra-cli-options="--ignore-certificate-errors --hide-scrollbars"')
     console.log('');
     console.log('  Example:');
     console.log('    Render single pdf file');
