@@ -123,15 +123,13 @@ class RenderPDF {
             options.printBackground = !!this.options.includeBackground;
         }
 
-        if(this.options['paper-width'] !== undefined) {
-            options.paperWidth = parseFloat(this.options['paper-width']);
+        if(this.options.paperWidth !== undefined) {
+            options.paperWidth = parseFloat(this.options.paperWidth);
         }
 
-        if(this.options['paper-height'] !== undefined) {
-            options.paperHeight = parseFloat(this.options['paper-height']);
+        if(this.options.paperHeight !== undefined) {
+            options.paperHeight = parseFloat(this.options.paperHeight);
         }
-        console.log(this.options);
-        console.log(options);
         return options;
     }
 
