@@ -130,8 +130,6 @@ class RenderPDF {
         if(this.options.paperHeight !== undefined) {
             options.paperHeight = parseFloat(this.options.paperHeight);
         }
-        console.log(this.options);
-        console.log(options);
         return options;
     }
 
