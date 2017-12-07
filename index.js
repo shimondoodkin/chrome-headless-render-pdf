@@ -130,6 +130,8 @@ class RenderPDF {
         if(this.options.paperHeight !== undefined) {
             options.paperHeight = parseFloat(this.options.paperHeight);
         }
+        console.log(this.options);
+        console.log(options);
         return options;
     }
 
@@ -165,10 +167,8 @@ class RenderPDF {
     }
 
     browserLog(type, msg) {
-        const lines = msg.split('\n');
-        for (const line of lines) {
-            this.log(`(chrome) (${type}) ${line}`);
-        }
+            this.log(`(chrome) (${type}) `,msg);
+     
     }
 
     async spawnChrome() {
@@ -176,17 +176,20 @@ class RenderPDF {
         this.log('Using', chromeExec);
         const commandLineOptions = [
 		     '--headless', 
+             '--no-sandbox', 
              '--interpreter-none', 
              '--disable-translate', 
              '--disable-extensions', 
              '--safebrowsing-disable-auto-update', 
-             '--metrics-recording-only', 
+             '--disable-metrics', 
              '--disable-default-apps', 
              '--no-first-run', 
              '--mute-audio', 
              '--hide-scrollbars', 
              '--disable-plugins', 
              '--disable-sync', 
+             '--incognito',
+             '--disk-cache-dir=/dev/null',
              `--remote-debugging-port=${this.port}`, 
              '--disable-gpu'
             ];
@@ -205,8 +208,8 @@ class RenderPDF {
         );
         this.chrome.on('close', (code) => {
             this.log(`Chrome stopped (${code})`);
-            this.browserLog('out', this.chrome.stdout.toString());
-            this.browserLog('err', this.chrome.stderr.toString());
+            this.browserLog('out', this.chrome.stdout);
+            this.browserLog('err', this.chrome.stderr);
         });
     }
 
