@@ -22,7 +22,17 @@
 // 
 // if paperWidth and paperHeight are not specified, it makes pdf of size of pixels at dpi
 //
-// i don't have budget to make better code or examples at the moment.
+//  I opensourced this. however, i don't have budget to make better code or examples at the moment.
+//  if anyone wants to develop a proper commit you are welcome
+//
+// also i did not developed the usage methods, just the underlying low level method
+//
+// to install it i write 
+// on windows:
+// npm install --save shimondoodkin/chrome-headless-render-pdf#master
+// on linux
+// npm install --save shimondoodkin/chrome-headless-render-pdf\#master
+
 
 import {loadNodejs,generatePages} from 'print/sections/print-view/raws'
 import util from 'util'
