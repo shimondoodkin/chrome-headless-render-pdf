@@ -493,10 +493,27 @@ class RenderPDF {
         if (await this.isCommandExists('chromium')) {
             return 'chromium';
         }
+        if (await this.isCommandExists('chromium-browser')) {
+            return 'chromium-browser';
+        }
+		
         // windows
-        if (await this.isCommandExists('chrome')) {
+        if (await this.isCommandExists('chrome')) { 
             return 'chrome';
         }
+		
+		var isWin = /^win/.test(process.platform);
+
+        if (isWin&&fs.statSync('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe').isFile()) {
+            return 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
+        }
+        if (isWin&&fs.statSync(process.env.ProgramFiles+'\\Google\\Chrome\\Application\\chrome.exe').isFile()) {
+            return process.env.ProgramFiles+'\\Google\\Chrome\\Application\\chrome.exe';
+        }
+        if (isWin&&fs.statSync(process.env['ProgramFiles(x86)']+'\\Google\\Chrome\\Application\\chrome.exe').isFile()) {
+            return process.env['ProgramFiles(x86)']+'\\Google\\Chrome\\Application\\chrome.exe';
+        }
+		
         // macos
         if (await this.isCommandExists('/Applications/Google\ Chrome Canary.app/Contents/MacOS/Google\ Chrome')) {
             return '/Applications/Google\ Chrome Canary.app/Contents/MacOS/Google\ Chrome';
