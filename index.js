@@ -441,6 +441,7 @@ class RenderPDF {
              '--disable-plugins', 
              '--disable-sync', 
              '--incognito',
+	     '--force-device-scale-factor=1',      // for macos, on macos they solved hires retina pixel=pixel*2, not pixel=subpixel , so without this it cuptures half.
              isWin?'--disk-cache-dir=null':'--disk-cache-dir=/dev/null',
              `--remote-debugging-port=${this.port}`, 
              '--disable-gpu'
