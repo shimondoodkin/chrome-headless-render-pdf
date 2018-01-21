@@ -6,7 +6,7 @@ const net = require('net');
 const commandExists = require('command-exists');
 //const Jimp = require('jimp')
 //const { createCanvas, Image } = require('canvas-prebuilt')
-const Canvas = require('canvas-prebuilt')
+const Canvas = require('canvas')
 var stream = require('stream');
 					
 class RenderPDF {
@@ -145,7 +145,6 @@ class RenderPDF {
 					await this.profileScope('Running script', async () => {
 						await Runtime.evaluate({expression:script})
 					});	
-					
                 if(url!=='about:blank')
 					await this.profileScope('Wait for load', async () => {
 						await loaded;
@@ -262,6 +261,40 @@ class RenderPDF {
 				
 					
 				
+				
+            });
+        });
+    }
+	
+    async print(url, options, script) {
+        return new Promise((resolve) => {
+            CDP({port: this.port}, async (client) => {
+				this.log(`Opening `+ url.substr(0,150)+(url.length>150?'...':'') );
+                const {Page, Emulation, Animation, Runtime /*, HeadlessExperimental*/} = client;
+                await Page.enable();
+                await Animation.enable();
+				//await HeadlessExperimental.enable() 
+                await Page.navigate({url});
+				await Emulation.setVirtualTimePolicy({policy: 'pauseIfNetworkFetchesPending', budget: options.timeout||5000}); 
+                const loaded = this.cbToPromise(Page.loadEventFired);
+                const jsDone = this.cbToPromise(Emulation.virtualTimeBudgetExpired);
+                //const shotDone = this.cbToPromise(HeadlessExperimental.mainFrameReadyForScreenshots); 
+				
+				if(script) 
+					await this.profileScope('Running script', async () => {
+						await Runtime.evaluate({expression:script})
+					});	
+					
+                if(url!=='about:blank')
+					await this.profileScope('Wait for load', async () => {
+						await loaded;
+					});
+					
+                await this.profileScope('Wait for js execution', async () => {
+                    await jsDone;
+                });
+				await Runtime.evaluate({expression:'window.print();'})
+                client.close();
 				
             });
         });
@@ -428,23 +461,24 @@ class RenderPDF {
 		var isWin = /^win/.test(process.platform);
         const commandLineOptions = [
 		     '--headless', 
-             '--no-sandbox', 
+             '--no-sandbox', //enables run as root
              '--interpreter-none', 
-             '--disable-translate', 
-             '--disable-extensions', 
-             '--safebrowsing-disable-auto-update', 
-             '--disable-metrics', 
-             '--disable-default-apps', 
-             '--no-first-run', 
+             '--disable-translate',   //disables some extensions
+             '--disable-extensions',  //disables some extensions
+             '--safebrowsing-disable-auto-update', //disables some executions on start
+             '--disable-metrics',                  //disables some executions on start
+             '--disable-default-apps',             //disables some extensions
+             '--no-first-run',                     //disables some executions on start
              '--mute-audio', 
              '--hide-scrollbars', 
-             '--disable-plugins', 
-             '--disable-sync', 
+             '--disable-plugins',     //disables some extensions
+             '--disable-sync',                     //disables some executions on start
              '--incognito',
-	     '--force-device-scale-factor=1',      // for macos, on macos they solved hires retina pixel=pixel*2, not pixel=subpixel , so without this it cuptures half.
+             '--kiosk-printing',     //print to printer on window.print();
+			 '--force-device-scale-factor=1',      //for mac screen_size=screen_size, not different pixels
+			 
              isWin?'--disk-cache-dir=null':'--disk-cache-dir=/dev/null',
-             `--remote-debugging-port=${this.port}`, 
-             '--disable-gpu'
+             `--remote-debugging-port=${this.port}`
             ]; 
 
         if (this.commandLineOptions.windowSize !== undefined ) {
