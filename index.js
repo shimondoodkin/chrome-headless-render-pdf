@@ -6,7 +6,7 @@ const net = require('net');
 const commandExists = require('command-exists');
 //const Jimp = require('jimp')
 //const { createCanvas, Image } = require('canvas-prebuilt')
-const Canvas = require('canvas')
+const Canvas = require('canvas-prebuilt')
 var stream = require('stream');
 					
 class RenderPDF {
